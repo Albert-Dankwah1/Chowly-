@@ -4,18 +4,18 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { AppLayout } from "@/layout/app-layout";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { BannersPage } from "@/pages/banners-page";
-import { CategoriesPage } from "@/pages/categories-page";
-import { CustomersPage } from "@/pages/customers-page";
-import { DashboardPage } from "@/pages/dashboard-page";
-import { LoginPage } from "@/pages/login-page";
-import { NoAccessPage } from "@/pages/no-access-page";
-import { OrderDetailPage } from "@/pages/order-detail-page";
-import { OrdersPage } from "@/pages/orders-page";
-import { RestaurantDetailPage } from "@/pages/restaurant-detail-page";
-import { RestaurantsPage } from "@/pages/restaurants-page";
-import { RidersPage } from "@/pages/riders-page";
-import { SettingsPage } from "@/pages/settings-page";
+import { NoAccessPage } from "@/pages/auth/no-access-page";
+import { SignInPage } from "@/pages/auth/sign-in-page";
+import { BannersPage } from "@/pages/banners/banners-page";
+import { CategoriesPage } from "@/pages/categories/categories-page";
+import { CustomersPage } from "@/pages/customers/customers-page";
+import { DashboardPage } from "@/pages/dashboard/dashboard-page";
+import { OrderDetailPage } from "@/pages/orders/order-detail-page";
+import { OrdersPage } from "@/pages/orders/orders-page";
+import { RestaurantDetailPage } from "@/pages/restaurants/restaurant-detail-page";
+import { RestaurantsPage } from "@/pages/restaurants/restaurants-page";
+import { RidersPage } from "@/pages/riders/riders-page";
+import { SettingsPage } from "@/pages/settings/settings-page";
 import { ProtectedRoute } from "@/routes/protected-route";
 import { PublicOnlyRoute } from "@/routes/public-only-route";
 import { queryClient } from "@/lib/query-client";
@@ -28,7 +28,7 @@ export default function App() {
         <BrowserRouter>
         <Routes>
           <Route element={<PublicOnlyRoute />}>
-            <Route path="/login" element={<LoginPage />} />
+            <Route path="/login" element={<SignInPage />} />
           </Route>
 
           {/* Signed in but wrong role: reachable without being an admin. */}

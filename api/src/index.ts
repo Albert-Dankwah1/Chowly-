@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
@@ -15,9 +17,24 @@ import { NotFoundException } from "./utils/app-error";
 import { logger } from "./utils/logger";
 
 const app = express();
+const isProduction = Env.NODE_ENV === "production";
 
 app.disable("x-powered-by");
-app.use(helmet());
+// Render terminates TLS in front of the app; without this Express sees the
+// proxy's plain HTTP hop and refuses to set `secure` cookies.
+app.set("trust proxy", 1);
+app.use(
+  helmet({
+    // The admin SPA is served from this same origin in production, so helmet's
+    // default `img-src 'self'` would block the Cloudinary-hosted media.
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        "img-src": ["'self'", "data:", "blob:", "https://res.cloudinary.com"],
+      },
+    },
+  }),
+);
 // Stripe signs the exact bytes it sent, so this one route keeps the raw body
 // and must be mounted before any JSON parser.
 app.post(
@@ -45,6 +62,28 @@ app.use(passport.initialize());
 app.get("/health", (_request, response) => response.status(HTTPSTATUS.OK).json({ status: "ok" }));
 
 app.use("/api/v1", apiLimiter, routes);
+
+if (isProduction) {
+  // The bundle runs from api/dist, so the admin build sits two levels up.
+  const adminDistPath = path.resolve(__dirname, "../../admin/dist");
+
+  app.use(
+    express.static(adminDistPath, {
+      // Vite fingerprints everything under /assets, so those are safe to pin.
+      maxAge: "1y",
+      index: false,
+      setHeaders: (response, filePath) => {
+        if (filePath.endsWith("index.html")) response.setHeader("Cache-Control", "no-cache");
+      },
+    }),
+  );
+
+  // Client-side routes (/orders, /riders, ...) fall back to the SPA shell, while
+  // anything under /api keeps reaching the 404 handler below.
+  app.get(/^(?!\/api).*/, (_request, response) => {
+    response.sendFile(path.join(adminDistPath, "index.html"));
+  });
+}
 
 app.use((request, _response, next) => {
   next(new NotFoundException(`Route not found: ${request.method} ${request.originalUrl}`));

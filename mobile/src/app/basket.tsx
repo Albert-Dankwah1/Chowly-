@@ -28,7 +28,7 @@ export default function BasketScreen() {
   const { data, isLoading } = useBasket();
   const setQuantity = useSetBasketItemQuantity();
   const updateBasket = useUpdateBasket();
-  const [primary, primaryTint, subtle, muted, border, success] = useCSSVariable(
+  const [primary, primaryTint, subtle, muted, border, success, foreground] = useCSSVariable(
     [
       "--color-primary",
       "--color-secondary",
@@ -36,6 +36,7 @@ export default function BasketScreen() {
       "--color-muted-foreground",
       "--color-border",
       "--color-success",
+      "--color-foreground",
     ],
   );
 
@@ -63,7 +64,7 @@ export default function BasketScreen() {
         hitSlop={8}
         onPress={close}
       >
-        <Ionicons name="arrow-back" size={24} />
+        <Ionicons color={foreground as string} name="arrow-back" size={24} />
       </Pressable>
       <Text
         accessibilityRole="header"

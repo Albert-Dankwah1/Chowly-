@@ -1,8 +1,13 @@
 import axios from "axios";
 import type { AxiosError, AxiosInstance } from "axios";
 
-/** Set VITE_API_URL in admin/.env. */
-const baseURL = import.meta.env.VITE_API_URL ?? "http://localhost:8000/api/v1";
+/**
+ * Set VITE_API_URL in admin/.env to point at a different host. Leave it unset in
+ * production: the API serves this build, so a relative path keeps the auth
+ * cookie same-origin.
+ */
+const baseURL =
+  import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "/api/v1" : "http://localhost:8000/api/v1");
 
 /** The shape the API's error handler returns for every failure. */
 export type ApiErrorBody = {

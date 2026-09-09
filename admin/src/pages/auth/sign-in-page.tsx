@@ -29,7 +29,7 @@ const HIGHLIGHTS = [
   { icon: BarChart3Icon, label: "Real-time updates" },
 ];
 
-export function LoginPage() {
+export function SignInPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const login = useLogin();

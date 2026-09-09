@@ -13,7 +13,9 @@ const isProduction = Env.NODE_ENV === "production";
 const baseCookieOptions: CookieOptions = {
   httpOnly: true,
   path: "/",
-  sameSite: isProduction ? "none" : "lax",
+  // The API serves the admin build in production, so the cookie is same-origin
+  // and does not need the third-party "none" mode browsers are phasing out.
+  sameSite: "lax",
   secure: isProduction,
 };
 

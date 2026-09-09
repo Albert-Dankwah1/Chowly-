@@ -26,13 +26,14 @@ export default function RestaurantDetailScreen() {
   const { data, error, isLoading } = useRestaurant(slug ?? "");
   const { data: basketData } = useBasket();
   const addItem = useAddBasketItem();
-  const [primary, rating, muted, subtle, offer, border] = useCSSVariable([
+  const [primary, rating, muted, subtle, offer, border, foreground] = useCSSVariable([
     "--color-primary",
     "--color-rating",
     "--color-muted-foreground",
     "--color-subtle-foreground",
     "--color-offer",
     "--color-border",
+    "--color-foreground",
   ]);
 
   if (isLoading) return <RestaurantDetailSkeleton />;
@@ -138,7 +139,7 @@ export default function RestaurantDetailScreen() {
               className="h-11 w-11 items-center justify-center rounded-pill bg-card active:opacity-80"
               onPress={() => (router.canGoBack() ? router.back() : router.replace("/home"))}
             >
-              <Ionicons name="arrow-back" size={22} />
+              <Ionicons color={foreground as string} name="arrow-back" size={22} />
             </Pressable>
             <Pressable
               accessibilityLabel="Save to favourites"
@@ -146,7 +147,7 @@ export default function RestaurantDetailScreen() {
               className="h-11 w-11 items-center justify-center rounded-pill bg-card active:opacity-80"
               onPress={() => router.push("/profile")}
             >
-              <Ionicons name="heart-outline" size={22} />
+              <Ionicons color={foreground as string} name="heart-outline" size={22} />
             </Pressable>
           </View>
         </View>

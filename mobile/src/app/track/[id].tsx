@@ -27,7 +27,11 @@ export default function OrderTrackingScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id?: string }>();
-  const [primary, subtle] = useCSSVariable(["--color-primary", "--color-subtle-foreground"]);
+  const [primary, subtle, foreground] = useCSSVariable([
+    "--color-primary",
+    "--color-subtle-foreground",
+    "--color-foreground",
+  ]);
 
   // The rider moves while the screen is open, so keep this one fresh.
   const { data: order, isLoading } = useOrder(id ?? "", { refetchInterval: 15_000 });
@@ -67,7 +71,7 @@ export default function OrderTrackingScreen() {
           hitSlop={8}
           onPress={close}
         >
-          <Ionicons name="arrow-back" size={24} />
+          <Ionicons color={foreground as string} name="arrow-back" size={24} />
         </Pressable>
         <View className="flex-1" />
         <View className="h-11 w-11" />

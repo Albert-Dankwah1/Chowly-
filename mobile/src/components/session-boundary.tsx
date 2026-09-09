@@ -16,7 +16,7 @@ const MARK_WIDTH = 144;
 export function SessionLoading() {
   return (
     <View
-      className="flex-1 items-center justify-center gap-8"
+      className="flex-1 items-center justify-center gap-3"
       style={{ backgroundColor: SPLASH_BACKGROUND }}
     >
       {/* expo-image ignores className for sizing, so the box is a style. */}

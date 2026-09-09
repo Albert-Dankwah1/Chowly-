@@ -30,10 +30,11 @@ export default function OrderDetailScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id?: string }>();
-  const [primary, subtle, border] = useCSSVariable([
+  const [primary, subtle, border, foreground] = useCSSVariable([
     "--color-primary",
     "--color-subtle-foreground",
     "--color-border",
+    "--color-foreground",
   ]);
 
   const { data: order, isLoading } = useOrder(id ?? "");
@@ -50,7 +51,7 @@ export default function OrderDetailScreen() {
         hitSlop={8}
         onPress={close}
       >
-        <Ionicons name="arrow-back" size={24} />
+        <Ionicons color={foreground as string} name="arrow-back" size={24} />
       </Pressable>
       <Text
         accessibilityRole="header"

@@ -50,11 +50,12 @@ export default function DishDetailScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { data, error, isLoading } = useDish(id ?? "");
-  const [primary, subtle, muted, border] = useCSSVariable([
+  const [primary, subtle, muted, border, foreground] = useCSSVariable([
     "--color-primary",
     "--color-subtle-foreground",
     "--color-muted-foreground",
     "--color-border",
+    "--color-foreground",
   ]);
 
   const { data: basketData } = useBasket();
@@ -224,7 +225,7 @@ export default function DishDetailScreen() {
                 className="h-11 w-11 items-center justify-center rounded-pill bg-card active:opacity-80"
                 onPress={close}
               >
-                <Ionicons name="close" size={22} />
+                <Ionicons color={foreground as string} name="close" size={22} />
               </Pressable>
               <Pressable
                 accessibilityLabel="Save to favourites"
@@ -232,7 +233,7 @@ export default function DishDetailScreen() {
                 className="h-11 w-11 items-center justify-center rounded-pill bg-card active:opacity-80"
                 onPress={() => router.push("/profile")}
               >
-                <Ionicons name="heart-outline" size={22} />
+                <Ionicons color={foreground as string} name="heart-outline" size={22} />
               </Pressable>
             </View>
           </View>

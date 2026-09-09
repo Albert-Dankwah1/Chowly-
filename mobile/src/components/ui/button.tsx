@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { useCSSVariable } from "uniwind";
 
 type Variant = "primary" | "outline" | "outline-inverse" | "link";
 
@@ -27,11 +28,12 @@ const labelStyle: Record<Variant, string> = {
   link: "font-heading text-body text-primary",
 };
 
-const spinnerColor: Record<Variant, string> = {
-  primary: "#ffffff",
-  outline: "#102a2a",
-  "outline-inverse": "#ffffff",
-  link: "#007f72",
+/** The two inverse variants sit on colour, so their white is not theme-bound. */
+const SPINNER_VARIABLE: Record<Variant, string | null> = {
+  primary: null,
+  outline: "--color-card-foreground",
+  "outline-inverse": null,
+  link: "--color-primary",
 };
 
 export function Button({
@@ -43,6 +45,10 @@ export function Button({
   icon,
   accessibilityHint,
 }: Props) {
+  // The variable is read every render, so the spinner follows the theme.
+  const themed = useCSSVariable(SPINNER_VARIABLE[variant] ?? "--color-card-foreground");
+  const spinner = SPINNER_VARIABLE[variant] ? (themed as string) : "#ffffff";
+
   const inactive = disabled || loading;
 
   return (
@@ -58,7 +64,7 @@ export function Button({
       onPress={onPress}
     >
       {loading ? (
-        <ActivityIndicator color={spinnerColor[variant]} size="small" />
+        <ActivityIndicator color={spinner} size="small" />
       ) : (
         <>
           {icon ? <View>{icon}</View> : null}

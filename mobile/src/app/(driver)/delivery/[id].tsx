@@ -65,13 +65,14 @@ export default function DeliveryDetailScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id?: string }>();
-  const [primary, subtle, warning, success, muted, border] = useCSSVariable([
+  const [primary, subtle, warning, success, muted, border, foreground] = useCSSVariable([
     "--color-primary",
     "--color-subtle-foreground",
     "--color-warning",
     "--color-success",
     "--color-muted-foreground",
     "--color-border",
+    "--color-foreground",
   ]);
 
   const { data, isLoading } = useDelivery(id ?? "");
@@ -94,7 +95,7 @@ export default function DeliveryDetailScreen() {
         hitSlop={8}
         onPress={close}
       >
-        <Ionicons name="arrow-back" size={24} />
+        <Ionicons color={foreground as string} name="arrow-back" size={24} />
       </Pressable>
       <Text
         accessibilityRole="header"

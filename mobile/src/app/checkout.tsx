@@ -32,11 +32,12 @@ type EditableField = "phone" | "instructions" | null;
 export default function CheckoutScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [primary, subtle, muted, border] = useCSSVariable([
+  const [primary, subtle, muted, border, foreground] = useCSSVariable([
     "--color-primary",
     "--color-subtle-foreground",
     "--color-muted-foreground",
     "--color-border",
+    "--color-foreground",
   ]);
 
   const { data: basketData, isLoading } = useBasket();
@@ -69,7 +70,7 @@ export default function CheckoutScreen() {
         hitSlop={8}
         onPress={close}
       >
-        <Ionicons name="arrow-back" size={24} />
+        <Ionicons color={foreground as string} name="arrow-back" size={24} />
       </Pressable>
       <Text
         accessibilityRole="header"
