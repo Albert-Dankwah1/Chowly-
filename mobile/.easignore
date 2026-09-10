@@ -41,6 +41,12 @@ example
 # generated native folders
 /ios
 /android
+src/uniwind-types.d.ts
+
+
+.claude
+.agents
+
 
 # local env
 .env

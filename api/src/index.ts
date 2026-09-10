@@ -71,16 +71,15 @@ if (isProduction) {
     express.static(adminDistPath, {
       // Vite fingerprints everything under /assets, so those are safe to pin.
       maxAge: "1y",
+      // The shell is served by the fallback below so it never gets pinned.
       index: false,
-      setHeaders: (response, filePath) => {
-        if (filePath.endsWith("index.html")) response.setHeader("Cache-Control", "no-cache");
-      },
     }),
   );
 
   // Client-side routes (/orders, /riders, ...) fall back to the SPA shell, while
   // anything under /api keeps reaching the 404 handler below.
   app.get(/^(?!\/api).*/, (_request, response) => {
+    response.setHeader("Cache-Control", "no-cache");
     response.sendFile(path.join(adminDistPath, "index.html"));
   });
 }

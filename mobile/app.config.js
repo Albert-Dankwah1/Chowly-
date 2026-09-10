@@ -1,24 +1,30 @@
 /**
- * Wraps app.json so the map keys stay out of source control: Expo loads .env
- * into process.env before evaluating this file. Both keys are compiled into the
- * native project, so changing one needs a dev-client rebuild.
+ * Dynamic config: keeps the map keys out of source control by reading them from
+ * .env, which Expo loads before evaluating this file. Both keys are compiled
+ * into the native project, so changing one needs a dev-client rebuild.
+ *
+ * The static app.json arrives as `config`. It must be spread from that argument
+ * rather than `require("./app.json")`: a require is cached for the life of the
+ * process, so a CLI that writes to app.json (eas init writing extra.eas.projectId)
+ * would not see its own change on the verification read, and would roll it back.
  */
-const appJson = require("./app.json");
-
-module.exports = () => ({
-  ...appJson.expo,
+module.exports = ({ config }) => ({
+  ...config,
   android: {
-    ...appJson.expo.android,
+    ...config.android,
     config: {
-      ...appJson.expo.android?.config,
+      ...config.android?.config,
       googleMaps: { apiKey: process.env.ANDROID_MAPS_KEY ?? "" },
     },
   },
   ios: {
-    ...appJson.expo.ios,
+    ...config.ios,
     config: {
-      ...appJson.expo.ios?.config,
+      ...config.ios?.config,
       googleMapsApiKey: process.env.IOS_MAPS_KEY ?? "",
     },
+  },
+  extra: {
+    ...config.extra,
   },
 });
