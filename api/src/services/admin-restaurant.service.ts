@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { DishModel } from "../models/dish.model";
 import { OrderModel } from "../models/order.model";
 import { RestaurantModel } from "../models/restaurant.model";
+import { AdminRestaurantDetailStats, AdminRestaurantList, AdminRestaurantRow, AdminRestaurantStats } from "../types/admin-restaurant.types";
 import { NotFoundException } from "../utils/app-error";
 import { AdminRestaurantQuery } from "../validators/admin-restaurant.validator";
 import { getSettings } from "./settings.service";
@@ -17,42 +18,6 @@ const startOfUtcDay = () => {
   date.setUTCHours(0, 0, 0, 0);
 
   return date;
-};
-
-export type AdminRestaurantRow = {
-  _id: string;
-  name: string;
-  slug: string;
-  imageUrl: string;
-  address: string;
-  cuisines: string[];
-  rating: number;
-  ratingCount: number;
-  prepTimeMinMinutes: number;
-  prepTimeMaxMinutes: number;
-  deliveryFee: number;
-  minOrder: number;
-  commissionRate?: number;
-  description: string;
-  closesAt: string;
-  isOpen: boolean;
-  freeDeliveryThreshold?: number;
-  location?: { type: "Point"; coordinates: [number, number] };
-  isActive: boolean;
-  ordersToday: number;
-};
-
-export type AdminRestaurantStats = { total: number; active: number; inactive: number };
-
-export type AdminRestaurantList = {
-  restaurants: AdminRestaurantRow[];
-  total: number;
-  page: number;
-  pages: number;
-  stats: AdminRestaurantStats;
-  cuisines: string[];
-  /** Applied when a restaurant has no negotiated rate of its own. */
-  defaultCommissionRate: number;
 };
 
 const buildMatch = (query: AdminRestaurantQuery) => {
@@ -168,12 +133,6 @@ export const listRestaurants = async (
     stats: stats ?? { active: 0, inactive: 0, total: 0 },
     total,
   };
-};
-
-export type AdminRestaurantDetailStats = {
-  ordersToday: number;
-  revenueToday: number;
-  activeDishes: number;
 };
 
 /**

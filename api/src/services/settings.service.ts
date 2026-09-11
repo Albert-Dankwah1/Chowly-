@@ -1,4 +1,5 @@
 import { SETTINGS_DEFAULTS, SETTINGS_KEY, SettingsDocument, SettingsModel } from "../models/settings.model";
+import { DriverPayRates } from "../types/settings.types";
 import { SettingsInput } from "../validators/settings.validator";
 
 /**
@@ -12,8 +13,6 @@ export const getSettings = async (): Promise<SettingsDocument> => {
 
   return SettingsModel.create({ ...SETTINGS_DEFAULTS, key: SETTINGS_KEY });
 };
-
-export type DriverPayRates = { basePay: number; payPerKm: number };
 
 /** Read once per request that prices deliveries, then reused across the list. */
 export const getDriverPayRates = async (): Promise<DriverPayRates> => {

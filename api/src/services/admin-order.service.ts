@@ -1,6 +1,7 @@
 import mongoose, { PipelineStage } from "mongoose";
 
 import { OrderDocument, OrderModel, OrderStatus } from "../models/order.model";
+import { AdminOrderList, AdminOrderRow, AdminOrderStats } from "../types/admin-order.types";
 import { BadRequestException, NotFoundException } from "../utils/app-error";
 import { AdminOrderQuery } from "../validators/admin-order.validator";
 import { pushStatus } from "./order.service";
@@ -58,36 +59,6 @@ const buildMatch = (query: AdminOrderQuery): PipelineStage.Match["$match"] => {
   }
 
   return match;
-};
-
-export type AdminOrderRow = {
-  _id: string;
-  reference: string;
-  contactName: string;
-  restaurantName: string;
-  itemCount: number;
-  total: number;
-  /** What the restaurant earns from this order: subtotal minus commission. */
-  restaurantPayout: number;
-  status: OrderStatus;
-  paidAt?: string;
-  driverName?: string;
-  createdAt: string;
-};
-
-export type AdminOrderStats = {
-  ordersToday: number;
-  awaitingAction: number;
-  onDelivery: number;
-  revenueToday: number;
-};
-
-export type AdminOrderList = {
-  orders: AdminOrderRow[];
-  total: number;
-  page: number;
-  pages: number;
-  stats: AdminOrderStats;
 };
 
 /** Today's headline numbers, independent of whatever filter the table has. */

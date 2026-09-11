@@ -1,9 +1,14 @@
-import { UserAddressDocument, UserAddressModel } from "../models/user-address.model";
-import { OrderDocument, OrderModel, OrderStatus } from "../models/order.model";
-import { UserDocument, UserModel } from "../models/user.model";
 import { Env } from "../config/env.config";
 import { getStripe, isStripeConfigured } from "../config/stripe.config";
+import { BasketModel } from "../models/basket.model";
+import { OrderDocument, OrderModel, OrderStatus } from "../models/order.model";
+import { RestaurantModel } from "../models/restaurant.model";
+import { UserAddressDocument, UserAddressModel } from "../models/user-address.model";
+import { UserDocument, UserModel } from "../models/user.model";
+import { CheckoutPayload, ReorderResult } from "../types/order.types";
 import { BadRequestException, NotFoundException } from "../utils/app-error";
+import { logger } from "../utils/logger";
+import { CreateOrderInput } from "../validators/order.validator";
 import {
   addItem,
   clearBasket,
@@ -12,11 +17,7 @@ import {
   optionIdsFromNames,
   priceSelection,
 } from "./basket.service";
-import { BasketModel } from "../models/basket.model";
-import { RestaurantModel } from "../models/restaurant.model";
 import { commissionRateFor, getServiceFeeRate } from "./settings.service";
-import { CreateOrderInput } from "../validators/order.validator";
-import { logger } from "../utils/logger";
 
 const CURRENCY = "usd";
 
@@ -80,12 +81,6 @@ const resolveStripeCustomerId = async (user: UserDocument): Promise<string> => {
   await UserModel.updateOne({ _id: user._id }, { stripeCustomerId: customer.id }).exec();
 
   return customer.id;
-};
-
-export type CheckoutPayload = {
-  order: OrderDocument;
-  publishableKey: string;
-  paymentIntentClientSecret: string;
 };
 
 /**
@@ -211,8 +206,6 @@ export const createOrder = async (
     publishableKey: Env.STRIPE_PUBLISHABLE_KEY,
   };
 };
-
-export type ReorderResult = { added: number; skipped: string[] };
 
 /**
  * Rebuilds the basket from a past order. Items are re-priced from the current

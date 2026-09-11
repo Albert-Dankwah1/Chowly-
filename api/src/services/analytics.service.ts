@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 import { OrderModel, OrderStatus } from "../models/order.model";
+import { ActivityEvent, OverviewPayload, RecentOrder, RevenuePoint, StatusCount, Totals } from "../types/analytics.types";
 
 /** Unpaid orders never became business, so they stay out of every figure. */
 const PAID_STATUSES: OrderStatus[] = [
@@ -32,14 +33,6 @@ const daysAgo = (days: number) => {
   date.setUTCDate(date.getUTCDate() - days);
 
   return date;
-};
-
-export type Totals = {
-  orders: number;
-  revenue: number;
-  commission: number;
-  riderPayouts: number;
-  averageOrderValue: number;
 };
 
 const EMPTY_TOTALS: Totals = {
@@ -83,8 +76,6 @@ const totalsBetween = async (from: Date, to: Date): Promise<Totals> => {
   return row ?? EMPTY_TOTALS;
 };
 
-export type RevenuePoint = { date: string; revenue: number; commission: number };
-
 /** Daily revenue and commission, with empty days filled in so the line is continuous. */
 const revenueSeries = async (days: number): Promise<RevenuePoint[]> => {
   const from = daysAgo(days - 1);
@@ -113,8 +104,6 @@ const revenueSeries = async (days: number): Promise<RevenuePoint[]> => {
   });
 };
 
-export type StatusCount = { status: OrderStatus; count: number };
-
 const ordersByStatus = async (): Promise<StatusCount[]> => {
   const rows = await OrderModel.aggregate<StatusCount>([
     { $match: { status: paid() } },
@@ -126,16 +115,6 @@ const ordersByStatus = async (): Promise<StatusCount[]> => {
 
   // Fixed order and every bucket present, so the legend never reshuffles.
   return PAID_STATUSES.map((status) => ({ count: byStatus.get(status) ?? 0, status }));
-};
-
-export type RecentOrder = {
-  _id: string;
-  reference: string;
-  contactName: string;
-  restaurantName: string;
-  total: number;
-  status: OrderStatus;
-  createdAt: string;
 };
 
 const recentOrders = (limit: number) =>
@@ -154,15 +133,6 @@ const recentOrders = (limit: number) =>
       },
     },
   ]);
-
-export type ActivityEvent = {
-  orderId: string;
-  reference: string;
-  restaurantName: string;
-  status: OrderStatus;
-  note?: string;
-  at: string;
-};
 
 /**
  * The live feed, rebuilt from the status history every order already carries.
@@ -186,16 +156,6 @@ const recentActivity = (limit: number) =>
       },
     },
   ]);
-
-export type OverviewPayload = {
-  today: Totals;
-  yesterday: Totals;
-  series: RevenuePoint[];
-  byStatus: StatusCount[];
-  recent: RecentOrder[];
-  activity: ActivityEvent[];
-  liveOrders: number;
-};
 
 export const getOverview = async (days: number): Promise<OverviewPayload> => {
   const todayStart = startOfDay(new Date());

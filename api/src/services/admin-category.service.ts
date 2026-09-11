@@ -1,21 +1,5 @@
 import { CategoryModel } from "../models/category.model";
-
-export type AdminCategoryRow = {
-  _id: string;
-  name: string;
-  slug: string;
-  imageUrl: string;
-  backgroundColor: string;
-  sortOrder: number;
-  isActive: boolean;
-  restaurantCount: number;
-  dishCount: number;
-};
-
-export type AdminCategoryList = {
-  categories: AdminCategoryRow[];
-  stats: { total: number; active: number };
-};
+import { AdminCategoryList, AdminCategoryRow } from "../types/admin-category.types";
 
 /**
  * The catalogue with the two counts the backoffice cares about, in one pass.

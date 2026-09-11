@@ -1,15 +1,13 @@
 import mongoose from "mongoose";
 
 import { BannerDocument, BannerModel } from "../models/banner.model";
+import { BannerState } from "../types/banner.types";
 import { NotFoundException } from "../utils/app-error";
 import {
   BannerInput,
   BannerReorderInput,
   BannerUpdateInput,
 } from "../validators/banner.validator";
-
-/** What a banner is doing right now, derived from its window and its switch. */
-export type BannerState = "active" | "scheduled" | "expired" | "draft";
 
 export const bannerState = (banner: BannerDocument, now = new Date()): BannerState => {
   if (!banner.isActive) return "draft";

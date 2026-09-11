@@ -3,30 +3,10 @@ import { Types } from "mongoose";
 import { BasketDocument, BasketModel } from "../models/basket.model";
 import { DishDocument, DishModel } from "../models/dish.model";
 import { RestaurantDocument, RestaurantModel } from "../models/restaurant.model";
+import { BasketPayload, BasketTotals } from "../types/basket.types";
 import { BadRequestException, NotFoundException } from "../utils/app-error";
 import { AddBasketItemInput, BasketSettingsInput } from "../validators/basket.validator";
 import { getServiceFeeRate } from "./settings.service";
-
-
-
-export type BasketTotals = {
-  subtotal: number;
-  deliveryFee: number;
-  serviceFee: number;
-  total: number;
-  itemCount: number;
-  minOrder: number;
-  belowMinimum: boolean;
-  freeDeliveryThreshold: number | null;
-  /** How much more to spend to earn free delivery, or null when not applicable. */
-  amountToFreeDelivery: number | null;
-};
-
-export type BasketPayload = {
-  basket: BasketDocument | null;
-  restaurant: RestaurantDocument | null;
-  totals: BasketTotals;
-};
 
 const EMPTY_TOTALS: BasketTotals = {
   amountToFreeDelivery: null,

@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 import { OrderModel } from "../models/order.model";
 import { DriverStatus, UserModel } from "../models/user.model";
+import { AdminRiderList, AdminRiderRow, AdminRiderStats } from "../types/admin-rider.types";
 import { BadRequestException, NotFoundException } from "../utils/app-error";
 import {
   AdminRiderQuery,
@@ -19,38 +20,6 @@ const startOfUtcDay = () => {
   date.setUTCHours(0, 0, 0, 0);
 
   return date;
-};
-
-export type AdminRiderRow = {
-  _id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  driverStatus: DriverStatus;
-  isOnline: boolean;
-  isActive: boolean;
-  rating?: number;
-  ratingCount?: number;
-  deliveries: number;
-  earnings: number;
-  activeDeliveries: number;
-  lastDeliveryAt?: string;
-  createdAt: string;
-};
-
-export type AdminRiderStats = {
-  total: number;
-  online: number;
-  pending: number;
-  earningsToday: number;
-};
-
-export type AdminRiderList = {
-  riders: AdminRiderRow[];
-  total: number;
-  page: number;
-  pages: number;
-  stats: AdminRiderStats;
 };
 
 const buildMatch = (query: AdminRiderQuery) => {

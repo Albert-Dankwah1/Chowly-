@@ -2,9 +2,11 @@ import mongoose from "mongoose";
 
 import { OrderDocument, OrderModel, OrderPoint } from "../models/order.model";
 import { UserDocument, UserModel } from "../models/user.model";
+import { DeliveryPayload, DeliveryPayout, DriverSummary } from "../types/driver.types";
+import { DriverPayRates } from "../types/settings.types";
 import { BadRequestException, ForbiddenException, NotFoundException } from "../utils/app-error";
 import { pushStatus } from "./order.service";
-import { DriverPayRates, getDriverPayRates } from "./settings.service";
+import { getDriverPayRates } from "./settings.service";
 
 const EARTH_RADIUS_KM = 6371;
 
@@ -21,13 +23,6 @@ export const distanceKm = (from?: OrderPoint, to?: OrderPoint): number => {
     Math.cos(toRadians(from.lat)) * Math.cos(toRadians(to.lat)) * Math.sin(deltaLng / 2) ** 2;
 
   return EARTH_RADIUS_KM * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-};
-
-export type DeliveryPayout = {
-  base: number;
-  distance: number;
-  total: number;
-  distanceKm: number;
 };
 
 /**
@@ -60,8 +55,6 @@ export const assertApproved = (driver: UserDocument): void => {
       : "Your rider account is waiting for approval.",
   );
 };
-
-export type DeliveryPayload = { order: OrderDocument; payout: DeliveryPayout };
 
 const withPayout = (order: OrderDocument, rates: DriverPayRates): DeliveryPayload => ({
   order,
@@ -229,8 +222,6 @@ export const setOnline = async (driver: UserDocument, isOnline: boolean): Promis
 
   return isOnline;
 };
-
-export type DriverSummary = { deliveries: number; earnings: number; isOnline: boolean };
 
 /** What the rider has earned since midnight, from their own completed runs. */
 export const todaySummary = async (driver: UserDocument): Promise<DriverSummary> => {

@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 import { DishDocument, DishModel } from "../models/dish.model";
 import { RestaurantDocument, RestaurantModel } from "../models/restaurant.model";
+import { SearchResults } from "../types/search.types";
 
 const RESULT_LIMIT = 20;
 
@@ -15,11 +16,6 @@ const matcher = (term: string) =>
     $options: "i",
     $regex: term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
   });
-
-export type SearchResults = {
-  restaurants: RestaurantDocument[];
-  dishes: DishDocument[];
-};
 
 /** One term, two result groups: places to order from, and things to eat. */
 export const searchCatalogue = async (term: string): Promise<SearchResults> => {

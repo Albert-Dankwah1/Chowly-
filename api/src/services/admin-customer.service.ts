@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 import { OrderModel } from "../models/order.model";
 import { UserModel } from "../models/user.model";
+import { AdminCustomerList, AdminCustomerRow, AdminCustomerStats } from "../types/admin-customer.types";
 import { NotFoundException } from "../utils/app-error";
 import { AdminCustomerQuery, UpdateCustomerInput } from "../validators/admin-customer.validator";
 
@@ -16,32 +17,6 @@ const startOfUtcMonth = () => {
   date.setUTCHours(0, 0, 0, 0);
 
   return date;
-};
-
-export type AdminCustomerRow = {
-  _id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  isActive: boolean;
-  orders: number;
-  totalSpent: number;
-  lastOrderAt?: string;
-  createdAt: string;
-};
-
-export type AdminCustomerStats = {
-  total: number;
-  activeThisMonth: number;
-  newThisMonth: number;
-};
-
-export type AdminCustomerList = {
-  customers: AdminCustomerRow[];
-  total: number;
-  page: number;
-  pages: number;
-  stats: AdminCustomerStats;
 };
 
 const SORTS: Record<AdminCustomerQuery["sort"], Record<string, 1 | -1>> = {

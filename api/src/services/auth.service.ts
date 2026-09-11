@@ -1,30 +1,10 @@
 import { UserAddressDocument } from "../models/user-address.model";
 import { UserDocument, UserModel } from "../models/user.model";
+import { AuthResult, LoginInput, RegisterInput } from "../types/auth.types";
 import { BadRequestException, UnauthorizedException } from "../utils/app-error";
 import { signAccessToken } from "../utils/jwt";
 import { findDefaultAddress } from "./address.service";
 import { findUserByEmail, findUserByEmailWithPassword } from "./user.service";
-
-type RegisterInput = {
-  name: string;
-  email: string;
-  password: string;
-  phone?: string;
-};
-
-type LoginInput = {
-  email: string;
-  password: string;
-};
-
-type AuthResult = {
-  user: UserDocument;
-  accessToken: string;
-  /** Lets the client route to the address step instead of the home feed. */
-  hasAddress: boolean;
-  /** Rendered straight into the home header, so no extra request on launch. */
-  defaultAddress: UserAddressDocument | null;
-};
 
 const issueToken = (user: UserDocument) =>
   signAccessToken({ role: user.role, userId: user._id.toString() });
