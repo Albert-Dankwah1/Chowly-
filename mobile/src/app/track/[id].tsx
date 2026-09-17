@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCSSVariable } from "uniwind";
@@ -23,19 +23,28 @@ const HEADLINES: Partial<Record<OrderStatus, string>> = {
   ready: "Order ready for pickup",
 };
 
+function useCurrentTime(intervalMs = 30_000) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), intervalMs);
+    return () => clearInterval(timer);
+  }, [intervalMs]);
+  return now;
+}
+
 export default function OrderTrackingScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { id } = useLocalSearchParams<{ id?: string }>();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { data: order, isLoading } = useOrder(id ?? "", { refetchInterval: 15_000 });
+  const now = useCurrentTime();
+  const [summaryOpen, setSummaryOpen] = useState(false);
+
   const [primary, subtle, foreground] = useCSSVariable([
     "--color-primary",
     "--color-subtle-foreground",
     "--color-foreground",
   ]);
-
-  // The rider moves while the screen is open, so keep this one fresh.
-  const { data: order, isLoading } = useOrder(id ?? "", { refetchInterval: 15_000 });
-  const [summaryOpen, setSummaryOpen] = useState(false);
 
   const close = () => (router.canGoBack() ? router.back() : router.replace("/orders"));
 
@@ -50,7 +59,7 @@ export default function OrderTrackingScreen() {
     );
   }
 
-  const minutes = Math.ceil((new Date(order.estimatedDeliveryAt).getTime() - Date.now()) / 60_000);
+  const minutes = Math.ceil((new Date(order.estimatedDeliveryAt).getTime() - now) / 60_000);
   const spread = Math.max(order.prepTimeMaxMinutes - order.prepTimeMinMinutes, 1);
   const arrival =
     order.status === "delivered"

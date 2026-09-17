@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useCSSVariable } from "uniwind";
 
@@ -15,12 +15,12 @@ export default function SearchScreen() {
   // Typing on the home screen hands the first characters over to this one.
   const { handoff, q } = useLocalSearchParams<{ handoff?: string; q?: string }>();
   const [term, setTerm] = useState(q ?? "");
+  const [prevHandoff, setPrevHandoff] = useState(handoff);
 
-  // Search is a tab, so it keeps its last term. Arriving from the home field is a
-  // fresh intent: the handoff stamp changes and the term starts over.
-  useEffect(() => {
+  if (handoff !== prevHandoff) {
+    setPrevHandoff(handoff);
     if (handoff) setTerm(q ?? "");
-  }, [handoff, q]);
+  }
   const { data, isLoading, isTyping } = useSearch(term);
   const [subtle, muted, foreground, primary, rating] = useCSSVariable([
     "--color-subtle-foreground",

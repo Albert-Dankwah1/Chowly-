@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { initStripe, useStripe } from "@stripe/stripe-react-native";
+import { initStripe, useStripe } from "@/lib/stripe";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useState } from "react";

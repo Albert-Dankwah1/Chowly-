@@ -61,7 +61,7 @@ export default function DishDetailScreen() {
   const { data: basketData } = useBasket();
   const addItem = useAddBasketItem();
   const setQuantity = useSetBasketItemQuantity();
-  const groups = data?.dish.optionGroups ?? [];
+  const groups = useMemo(() => data?.dish.optionGroups ?? [], [data?.dish.optionGroups]);
   const [selection, setSelection] = useState<Selection | null>(null);
   const [note, setNote] = useState("");
 

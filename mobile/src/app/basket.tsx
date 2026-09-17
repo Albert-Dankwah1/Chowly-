@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -46,11 +46,12 @@ export default function BasketScreen() {
 
   const [noteOpen, setNoteOpen] = useState(false);
   const [note, setNote] = useState("");
+  const [prevOrderNote, setPrevOrderNote] = useState<string | undefined>(undefined);
 
-  // Keep the draft in step when the basket arrives or changes elsewhere.
-  useEffect(() => {
+  if (basket?.orderNote !== prevOrderNote) {
+    setPrevOrderNote(basket?.orderNote);
     setNote(basket?.orderNote ?? "");
-  }, [basket?.orderNote]);
+  }
 
   const close = () =>
     router.canGoBack() ? router.back() : router.replace("/home");

@@ -1,135 +1,129 @@
 # 🛵 Advanced MERN Delivery Platform — Chowly
 
-> A Deliveroo-style food delivery platform: a customer app, a rider app, and admin app, on one Node.js + MongoDB API.
+> A Deliveroo-style food delivery platform: a customer app, a rider app, and admin backoffice, on a single Node.js + MongoDB API.
 
 > This code, whether in parts or whole, is licensed for commercial use **only with a license**. It is **free for personal use**.
 > 👉 [Click here to obtain license](https://techwithemma.gumroad.com/l/huytmd) and 👉 [here to learn more](https://github.com/TechWithEmmaYT/Advanced-MERN-Delivery-Mobile-and-Admin-Platform/blob/main/TECHWITHEMMA-LICENSE.md)
 
-## ❤️ Support the Channel
+---
 
-Love this project? Here’s how you can support:
+## 📚 Project Documentation
 
-* ☕ [Buy Me a Coffee](https://buymeacoffee.com/techwithemmaofficial)
-* 🌟 Star this repo
-* 🎥 [Subscribe on YouTube](https://tinyurl.com/subcribe-to-techwithEmma)
+| Document | Purpose |
+| :--- | :--- |
+| 🔌 [**API Guide (`api/README.md`)**](./api/README.md) | Express 5 TypeScript API, routes, services, Mongoose models, seeds, and Stripe webhooks. |
+| 🖥️ [**Admin Guide (`admin/README.md`)**](./admin/README.md) | Vite React 19 backoffice portal, live queue, analytics charts, and catalog CRUD. |
+| 📱 [**Mobile Guide (`mobile/README.md`)**](./mobile/README.md) | Expo SDK 57 app with dual Customer and Driver flows, Uniwind theming, and web preview. |
+| 🏛️ [**System Architecture (`ARCHITECTURE.md`)**](./ARCHITECTURE.md) | Deep dive into data models, order state machines, zero-float math, and concurrency locks. |
 
 ---
 
 ## 📦 What's Inside
 
-| Folder     | What it is                | Stack                                                |
-| ---------- | ------------------------- | ---------------------------------------------------- |
-| `api/`     | REST API for all clients  | Express 5, TypeScript, MongoDB, Passport JWT
-| `mobile/`  | Customer **and** rider app | Expo SDK 57, Expo Router, React Native 0.86, Uniwind  |
-| `admin/`   | Backoffice dashboard      | Vite, React 19
+| Folder | What it is | Stack | Documentation |
+| :--- | :--- | :--- | :--- |
+| [`api/`](./api) | REST API for all clients | Express 5, TypeScript 7, MongoDB, Passport JWT, Zod | [API README](./api/README.md) |
+| [`mobile/`](./mobile) | Customer **and** Driver app | Expo SDK 57, Expo Router, React Native 0.86, Uniwind | [Mobile README](./mobile/README.md) |
+| [`admin/`](./admin) | Backoffice dashboard | Vite 8, React 19, Tailwind v4, TanStack Query, Radix UI | [Admin README](./admin/README.md) |
 
-One account model, three roles: `customer`, `driver`, `admin`.
-
----
-
-## 🤖 Built with Claude Code
-
-This project was built end to end with Claude Code, using Agent Skills.
-
-👉 **Get the skills here: [techwithemma.com/skills](https://techwithemma.com/skills)**
-
-Skills used in this build:
-
-* 🗺️ `plan-project` — Discovery & Implementation Plan
-* 🎨 `mobile-ui-design` — Screen Inventory & Visual Direction
-* 🧱 `nodejs-scaffolding` — Express + MongoDB + JWT API
-* 💳 `nodejs-payments` — Stripe Checkout & Webhooks
-* 🎨 `expo-uniwind-theme` — Uniwind Theme & Dark Mode
-* 📱 `expo-native-builder` — Expo Screens & Flows
-* 🧩 `shadcn` — Admin UI Components
-* 🌐 `agent-browser` — Browser Testing & Verification
+One unified account model, three dynamic roles: `customer`, `driver`, `admin`.
 
 ---
 
-## 🗝️ Key Features 👇
+## 🖥️ Admin Backoffice Previews
+
+| Executive Dashboard & Analytics | Live Operations & Order Queue |
+| :---: | :---: |
+| ![Admin Dashboard](./_designs/admin/dashboard-screen.png) | ![Admin Orders](./_designs/admin/orders-screen.png) |
+
+| Restaurant & Menu Catalog | Categories Drag & Drop Reordering |
+| :---: | :---: |
+| ![Restaurants Screen](./_designs/admin/restaurants-screen.png) | ![Categories Screen](./_designs/admin/categories-screen.png) |
+
+| Driver Fleet Management | Customer Accounts & Spend |
+| :---: | :---: |
+| ![Riders Screen](./_designs/admin/riders-screen.png) | ![Customers Screen](./_designs/admin/customer-screen.png) |
+
+---
+
+## ⚡ Quick Dev Preview (No Database or API Keys Required!)
+
+You can explore all three applications right now in dev mode without setting up MongoDB, Stripe, or Cloudinary:
+
+| App | Development URL | Mock Credentials | Experience |
+| :--- | :--- | :--- | :--- |
+| **Admin Backoffice** | `http://localhost:5173` | `admin@chowly.app`<br/>*(any password)* | Live metrics, analytics charts, order queue, restaurant & dish management, categories, fleet riders, and settings. |
+| **Mobile Customer** | `http://localhost:8081` *(or native)* | `customer@chowly.app`<br/>*(any password)* | Food discovery, restaurant menus, dish customizer, basket sheet, checkout, and live order tracking. |
+| **Mobile Driver** | `http://localhost:8081` *(or native)* | `driver@chowly.app`<br/>*(any password)* | Availability toggle (Online/Offline), open delivery queue, guaranteed payouts, and delivery handover with 4-digit PIN. |
+
+*Note: The login interfaces remain 100% clean and authentic—no demo buttons or test banners are displayed on screen.*
+
+---
+
+## 🗝️ Key Features
 
 ### 📱 Customer App
-
 * 🔐 Authentication (Email + Password with JWT)
-* 📍 Location Permission & Address Capture
-* 🏠 Home Discovery
-* 🗂️ Category
+* 📍 Location Permission & GPS Reverse Geocoding Address Capture
+* 🏠 Home Discovery & Category Filters
 * 🖼️ Promo Banner Carousel
 * 🔎 Search Restaurants & Dishes
-* 🍕 Dish Options, Extras & Notes
-* 🧺 Basket with Restaurant Switch Prompt
-* 💳 Stripe Checkout (Payment Sheet)
-* 📦 Orders List & Order Details
-* 🗺️ Live Order Tracking with Map
-* 🔢 Delivery Confirmation Code
-* ♻️ Reorder Past Orders
-* ⭐ Saved Addresses
-* 🌙 Dark Mode
-* ⏬ Pull to Refresh
+* 🍕 Dish Customizer with Option Groups (radios/checkboxes) & Notes
+* 🧺 Modal Basket with Single-Restaurant Conflict Prompt
+* 💳 Card Checkout (Stripe PaymentSheet on mobile, web-safe preview)
+* 📦 Orders History & Live Order Tracking
+* 🔢 Doorstep 4-Digit Delivery Confirmation PIN
+* ♻️ One-Tap Reorder
+* ⭐ Saved Addresses & Saved Favourites
+* 🌙 Light / Dark Theme
 
 ### 🛵 Rider App
-
-* 🟢 Go Online / Offline
-* 📥 Open Delivery Queue
-* 💷 Pay Per Delivery (Base + Distance)
-* ✋ Claim Delivery
-* 📦 Mark Picked Up & Delivered
-* 🔐 Delivery Code Verification
-* 💰 Daily Earnings & Stats
+* 🟢 Go Online / Offline availability toggle
+* 📥 Open Ready Delivery Queue
+* 💷 Guaranteed Pay Per Delivery (`Base Pay + Km Distance`)
+* ✋ Atomic Single-Driver Order Claiming
+* 📦 Step-by-Step Pickup & Handover
+* 🔐 4-Digit Delivery PIN Verification
+* 💰 Daily Earnings Summary & Trip Counter
 
 ### 🖥️ Admin Dashboard
-
-* 🔐 Admin Authentication & Route Guards
-* 📈 Advanced Analytics (MongoDB Aggregate Pipeline)
-* 📊 Revenue Chart & Orders by Status
-* 🔴 Live Operations Feed
-* 🧾 Orders Management & Status Updates
-* 💵 Order Money Split (Commission, Payouts)
-* 🏪 Restaurants CRUD
-* 🍔 Dishes CRUD with Option Groups
-* 🗂️ Categories with Drag & Drop Ordering
-* 👥 Customers & Suspend / Reinstate
-* 🚴 Riders Approval & Suspension
-* 🖼️ Banners with Scheduling & Drag & Drop
-* ⚙️ Platform Settings (Rider Pay, Commission, Service Fee)
-* 🧑‍💼 Image Upload (Cloudinary)
-* 🔍 Filter, Search & Pagination
+* 🔐 Admin Authentication & Route Protection
+* 📈 Advanced Analytics (MongoDB Aggregation Pipelines)
+* 📊 Revenue Charts & Orders by Status Distribution
+* 🔴 Live Operations Event Stream
+* 🧾 Orders Management & Status Updates (`confirmed` $\rightarrow$ `preparing` $\rightarrow$ `ready`)
+* 💵 Order Payout & Commission Splits
+* 🏪 Restaurants CRUD & Hours Configuration
+* 🍔 Menu Dishes with Option Groups
+* 🗂️ Categories with Drag & Drop Ordering (`@dnd-kit`)
+* 👥 Customer Accounts & Status Controls
+* 🚴 Rider Fleet Approval & Suspension
+* 🖼️ Promotional Banners Scheduling
+* ⚙️ Platform Commission, Service Fee, and Rider Pay Settings
+* 🧑‍💼 Image CDN Uploads (Cloudinary)
 
 ### 🔌 API
-
-* 🧱 Layered Architecture (Route → Controller → Service → Model)
-* ✅ Zod Request Validation
-* 🍪 JWT via HTTP-only Cookie or Bearer Token
-* 🛡️ Role-Based Access (Customer, Driver, Admin)
-* 💵 Server-Side Money Calculations
-* 🪝 Stripe Webhooks with Idempotency
-* 🖼️ Cloudinary Uploads
-* 🌱 Database Seed Scripts
-
----
-
-## 🧰 Requirements
-
-* Node.js 20+
-* MongoDB (Atlas or local)
-* A Cloudinary account (images)
-* A Stripe account, test mode (payments)
-* Android Studio / Xcode for the mobile app, plus the Expo dev client
+* 🧱 Layered Architecture (`Route` $\rightarrow$ `Controller` $\rightarrow$ `Service` $\rightarrow$ `Model`)
+* ✅ Strict Zod Request Validation
+* 🍪 Dual JWT Transport: HTTP-only Cookie for Admin & Bearer Token for Mobile
+* 🛡️ Role-Based Access Control (`customer`, `driver`, `admin`)
+* 💵 Server-Side Integer Minor Unit Financial Math (Zero floating-point errors)
+* 🪝 Stripe Webhooks with Replay Protection & Idempotency
+* 🖼️ Cloudinary Uploads with Server-Signed Signatures
+* 🌱 Database Seed Scripts for Fast Bootstrapping
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Running the Full Stack (With MongoDB & Real Services)
 
 ### 1. API
-
 ```bash
 cd api
 npm install
-cp .env.example .env      # then fill it in
-npm run dev               # http://localhost:8000
+cp .env.example .env      # Configure MONGODB_URI and JWT_SECRET
+npm run dev               # Starts on http://localhost:8000
 ```
-Seed the catalogue and the test accounts:
-
+Seed catalog and test accounts:
 ```bash
 npm run seed:categories
 npm run seed:restaurants
@@ -137,46 +131,24 @@ npm run seed:banners
 npm run seed:admin
 npm run seed:driver
 ```
-For Stripe webhooks in development:
 
-```bash
-stripe listen --forward-to localhost:8000/api/v1/webhooks/stripe
-```
-
-### 2. Admin
-
+### 2. Admin Dashboard
 ```bash
 cd admin
 npm install
-npm run dev               # http://localhost:5173
+npm run dev               # Starts Vite on http://localhost:5173
 ```
-### 3. Mobile
 
+### 3. Mobile App
 ```bash
 cd mobile
 npm install
-cp .env.example .env      # EXPO_PUBLIC_API_URL + the Maps keys
-npx expo run:android      # or: npx expo run:ios
+cp .env.example .env
+npm start                 # Starts Expo Metro bundler
 ```
-On an Android emulator, point the app at your machine and forward the API port:
-
-```bash
-adb reverse tcp:8000 tcp:8000
-```
-
----
-
-## 📱 Building the Mobile App
-
-The app is native-only (`platforms: ["ios", "android"]`) and builds with EAS:
-
-```bash
-cd mobile
-npx eas build --platform android --profile preview
-```
-
-The Maps keys come from `.env` locally; for cloud builds set them as EAS
-environment variables, or the built app ships without a working map.
+- Press **`w`** for Web Browser (`http://localhost:8081`).
+- Press **`a`** for Android Emulator / Device.
+- Press **`i`** for iOS Simulator.
 
 ---
 
@@ -188,8 +160,8 @@ For more details about the license, please refer to [TECHWITHEMMA-LICENSE.md](./
 
 ---
 
-# 📺 Subscribe for More Projects
+## ❤️ Support the Channel
 
-If you find this helpful, support by subscribing and sharing:
-
-🔗 [https://tinyurl.com/subcribe-to-techwithEmma](https://tinyurl.com/subcribe-to-techwithEmma)
+* ☕ [Buy Me a Coffee](https://buymeacoffee.com/techwithemmaofficial)
+* 🌟 Star this repo
+* 🎥 [Subscribe on YouTube](https://tinyurl.com/subcribe-to-techwithEmma)

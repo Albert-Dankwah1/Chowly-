@@ -1,56 +1,128 @@
-# Welcome to your Expo app 👋
+# 📱 Chowly Mobile App (Customer & Driver)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> Unified mobile application serving both **Customers** and **Drivers**, routed dynamically by user role.
 
-## Get started
+Built with **Expo SDK 57**, **React Native 0.86**, **Expo Router**, and **Uniwind** (Tailwind CSS v4 for native).
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## 🎭 Two Personas in One App
 
-2. Start the app
+The app dynamically adapts based on the logged-in user:
 
-   ```bash
-   npx expo start
-   ```
+### 🛍️ Customer Journey
+- **Splash & Onboarding:** Location permission capture and reverse-geocoded default delivery address.
+- **Home Discovery:** Current address switcher, promo banner carousel, category ribbon, and restaurant feeds.
+- **Menu & Customization:** Restaurant profile, searchable dishes, customizable option groups (radios/checkboxes), and dietary allergen notes.
+- **Cart & Checkout:** Single-restaurant conflict prompt, fee breakdown, and in-app card payments.
+- **Live Order Tracking:** Status tracker, delivery route visualization, customer 4-digit confirmation PIN, and real-time status updates.
+- **Profile & Favourites:** Saved addresses, saved favourite spots, and theme preferences.
 
-In the output, you'll find options to open the app in a
+### 🛵 Driver Journey
+- **Go Online / Offline:** Real-time availability toggle.
+- **Available Deliveries Queue:** Open pool of kitchen-ready orders showing guaranteed pay (`Base + Km rate`).
+- **Atomic Claiming:** Race-condition protected single-driver job claims.
+- **Step-by-Step Fulfilment:** Navigation to restaurant, pickup verification, and doorstep delivery requiring customer PIN verification.
+- **Earnings Tracker:** Live daily summary of completed trips and earnings.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 🛠️ Tech Stack
 
-## Get a fresh project
+- **Framework:** Expo SDK 57 (React Native 0.86)
+- **Routing:** Expo Router 57 (File-based typed routing)
+- **Styling & Theming:** Uniwind (Tailwind CSS v4) with light/dark adaptive theme bridge
+- **Data Fetching:** TanStack Query v5 & Axios
+- **State Management:** Zustand
+- **Payments:** `@stripe/stripe-react-native` (with web-safe fallback bridge)
+- **Maps:** `react-native-maps` (with web-safe route preview)
+- **Animations:** React Native Reanimated & Motion primitives
+- **Storage:** `expo-secure-store` (with `localStorage` web fallback)
+- **Toasts:** Sonner Native
 
-When you're ready, run:
+---
+
+## 🚀 Getting Started
+
+### 1. Installation
 
 ```bash
-npm run reset-project
+cd mobile
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Environment Variables
 
-### Other setup steps
+Create `.env` based on `.env.example`:
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```bash
+cp .env.example .env
+```
 
-## Learn more
+| Variable | Description | Default |
+| :--- | :--- | :--- |
+| `EXPO_PUBLIC_API_URL` | Base URL of the Chowly API | `http://localhost:8000/api/v1` |
+| `ANDROID_MAPS_KEY` | Google Maps API key for Android native | `""` |
+| `IOS_MAPS_KEY` | Google Maps API key for iOS native | `""` |
 
-To learn more about developing your project with Expo, look at the following resources:
+*(Note: On an Android emulator, forward port 8000 using `adb reverse tcp:8000 tcp:8000` so localhost reaches your host machine).*
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### 3. Running the App
 
-## Join the community
+```bash
+npm start            # Starts the Expo Metro bundler
+```
 
-Join our community of developers creating universal apps.
+From the terminal menu:
+- Press **`w`** to open in **Web Browser** (`http://localhost:8081`).
+- Press **`a`** to open on an **Android Emulator / Device**.
+- Press **`i`** to open on an **iOS Simulator**.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## 🔑 Dev Mock Logins (No Backend Required)
+
+You can explore either user flow immediately using the built-in mock mode:
+
+| Role | Email | Password | Landing Page |
+| :--- | :--- | :--- | :--- |
+| **Customer** | `customer@chowly.app` | `customer123` *(or any)* | `(customer)/home` (Customer dashboard) |
+| **Driver**   | `driver@chowly.app`   | `driver123` *(or any)*   | `(driver)/driver-home` (Rider dashboard) |
+
+*The login UI remains clean and authentic without demo badges or buttons.*
+
+---
+
+## 📁 Directory Architecture
+
+```
+mobile/src/
+├── app/                  # Expo Router file-based screens
+│   ├── (auth)/           # Splash, welcome, sign-in, sign-up
+│   ├── (customer)/       # Customer tabs (home, search, orders, profile)
+│   ├── (driver)/         # Driver screens (driver-home, active delivery)
+│   ├── (onboarding)/     # Geolocation & address capture
+│   ├── basket.tsx        # Modal basket sheet
+│   ├── checkout.tsx      # Checkout & payment flow
+│   ├── dish/[id].tsx     # Dish customization modal
+│   ├── restaurant/[slug] # Restaurant menu screen
+│   └── track/[id].tsx    # Order tracking & confirmation PIN
+├── components/           # UI elements (cards, skeletons, sheets, banners, route map)
+├── features/             # Business queries & mutations (auth, basket, driver, location, orders)
+├── lib/                  # Axios client, dev mock adapter, query client, formatters
+└── global.css            # Tailwind CSS v4 root stylesheet
+```
+
+---
+
+## 📱 Native Dev Builds (EAS)
+
+Because `@stripe/stripe-react-native` and `react-native-maps` use native iOS and Android code, standalone native builds use EAS:
+
+```bash
+# Build Android preview APK
+npx eas build --platform android --profile preview
+
+# Build iOS preview
+npx eas build --platform ios --profile preview
+```

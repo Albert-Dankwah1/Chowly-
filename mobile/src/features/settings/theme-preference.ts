@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { Uniwind, type ThemeName } from "uniwind";
 
@@ -15,7 +16,12 @@ const isPreference = (value: string | null): value is ThemePreference =>
  */
 export const getStoredTheme = async (): Promise<ThemePreference> => {
   try {
-    const stored = await SecureStore.getItemAsync(THEME_KEY);
+    const stored =
+      Platform.OS === "web"
+        ? typeof localStorage !== "undefined"
+          ? localStorage.getItem(THEME_KEY)
+          : null
+        : await SecureStore.getItemAsync(THEME_KEY);
 
     return isPreference(stored) ? stored : "system";
   } catch {
@@ -27,6 +33,14 @@ export const applyTheme = async (preference: ThemePreference): Promise<void> => 
   Uniwind.setTheme(preference);
 
   try {
+    if (Platform.OS === "web") {
+      if (typeof localStorage !== "undefined") {
+        localStorage.setItem(THEME_KEY, preference);
+      }
+
+      return;
+    }
+
     await SecureStore.setItemAsync(THEME_KEY, preference);
   } catch {
     // A device that refuses the keystore still gets the theme for this session.
