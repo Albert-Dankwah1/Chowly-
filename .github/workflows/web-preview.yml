@@ -1,0 +1,90 @@
+name: Build Web Previews
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'admin/**'
+      - 'mobile/**'
+      - '.github/workflows/web-preview.yml'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-admin:
+    name: Build Admin Web Preview
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: admin
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: admin/package-lock.json
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: 🔍 Lint
+        run: npm run lint
+
+      - name: 🔨 Build Production Bundle
+        run: npm run build
+
+      - name: 🚀 Upload Admin Preview Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chowly-admin-web-preview
+          path: admin/dist
+          retention-days: 14
+
+  build-mobile-web:
+    name: Build Mobile Web Preview
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: 🔍 Typecheck
+        run: npx tsc --noEmit
+
+      - name: 🔍 Lint
+        run: npm run lint
+
+      - name: 🔨 Export Mobile Web
+        run: npx expo export --platform web
+
+      - name: 🚀 Upload Mobile Web Preview Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chowly-mobile-web-preview
+          path: mobile/dist
+          retention-days: 14
